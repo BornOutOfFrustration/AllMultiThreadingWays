@@ -52,8 +52,16 @@ namespace MultiThreadingWays
         public async void Calculate(int number1, int number2)
         {
             Console.WriteLine(@"Just before await call:");
-            // While waiting for the result of AddTwoNumbers, the program continues with caller of Calculate.
-            await AddTwoNumbers(number1, number2);
+            try
+            {
+                // While waiting for the result of AddTwoNumbers, the program continues with caller of Calculate.
+                int x = await AddTwoNumbers(number1, number2);
+            }
+            catch (Exception ex)
+            {
+                ;
+            }
+
             Console.WriteLine(@"Just after await call:");
         }
 
@@ -62,7 +70,19 @@ namespace MultiThreadingWays
             Task<int> task = new Task<int>(this.AddTwoNumbersBackGround, new Tuple<int, int>(number1, number2));
             task.Start();
 
-            return await task;
+            try
+            {
+                await task;
+            }
+            catch (Exception ex)
+            {
+                if (task.IsFaulted)
+                {
+                    ;
+                }
+            }
+
+            return task.Result;
         }
 
         private int AddTwoNumbersBackGround(object numbersTuple)
@@ -73,14 +93,65 @@ namespace MultiThreadingWays
             {
                 result = numbers.Item1 + numbers.Item2;
                 Thread.Sleep(12000);
+                return 3 / (numbers.Item1 - numbers.Item1);
             }
 
             return result;
         }
+    }
 
-        private void WriteTaskResultToConsole(Task<int> previousTask)
+    public class AsyncAwaitExample3
+    {
+
+        public async void Calculate(int number1, int number2)
         {
-            Console.WriteLine($"Result: {previousTask.Result.ToString()}");
+            Console.WriteLine(@"Just before await call:");
+            try
+            {
+                // While waiting for the result of AddTwoNumbers, the program continues with caller of Calculate.
+                int x = await AddTwoNumbers(number1, number2);
+            }
+            catch (Exception ex)
+            {
+                ;
+            }
+
+            Console.WriteLine(@"Just after await call:");
+        }
+
+        private async Task<int> AddTwoNumbers(int number1, int number2)
+        {
+            Task<int> task = new Task<int>(this.AddTwoNumbersBackGround, new Tuple<int, int>(number1, number2));
+            task.Start();
+
+            try
+            {
+                await task;
+            }
+            catch (AggregateException ex)
+            {
+                ex.Handle((x) =>
+                {
+                    Console.WriteLine(@"EXCEPTION");
+                    return true;
+                });
+            }
+
+            return task.Result;
+        }
+
+        private int AddTwoNumbersBackGround(object numbersTuple)
+        {
+            var result = 0;
+
+            if (numbersTuple is Tuple<int, int> numbers)
+            {
+                result = numbers.Item1 + numbers.Item2;
+                Thread.Sleep(12000);
+                return 3 / (numbers.Item1 - numbers.Item1);
+            }
+
+            return result;
         }
     }
 }

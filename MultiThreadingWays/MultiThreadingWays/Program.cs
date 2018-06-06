@@ -26,15 +26,36 @@ namespace MultiThreadingWays
 
 
             AsyncAwaitExample1 asyncAwaitExample = new AsyncAwaitExample1();
-
             try
             {
-                asyncAwaitExample.Calculate1(number1 + 2, number2 + 2);
+                asyncAwaitExample.Calculate(number1 + 2, number2 + 2);
             }
             catch(Exception ex)
             {
                 ;
             }
+
+            AsyncAwaitExample2 asyncAwaitExample2 = new AsyncAwaitExample2();
+            try
+            {
+                asyncAwaitExample2.Calculate(number1 + 3, number2 + 3);
+            }
+            catch (Exception ex)
+            {
+                ;
+            }
+
+            AsyncAwaitExample3 asyncAwaitExample3 = new AsyncAwaitExample3();
+            try
+            {
+                asyncAwaitExample3.Calculate(number1 + 4, number2 + 4);
+            }
+            catch (Exception ex)
+            {
+                ;
+            }
+
+
             Console.WriteLine(@"=====");
             Console.ReadLine();
 
