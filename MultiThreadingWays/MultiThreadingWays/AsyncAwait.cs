@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MultiThreadingWays
 {
-    public class AsyncAwaitExample
+    public class AsyncAwaitExample1
     {
 
         public async void Calculate(int number1, int number2)
@@ -25,6 +25,44 @@ namespace MultiThreadingWays
             task.Start();
 
             return task;
+        }
+
+        private int AddTwoNumbersBackGround(object numbersTuple)
+        {
+            var result = 0;
+
+            if (numbersTuple is Tuple<int, int> numbers)
+            {
+                result = numbers.Item1 + numbers.Item2;
+                Thread.Sleep(12000);
+            }
+
+            return result;
+        }
+
+        private void WriteTaskResultToConsole(Task<int> previousTask)
+        {
+            Console.WriteLine($"Result: {previousTask.Result.ToString()}");
+        }
+    }
+
+    public class AsyncAwaitExample2
+    {
+
+        public async void Calculate(int number1, int number2)
+        {
+            Console.WriteLine(@"Just before await call:");
+            // While waiting for the result of AddTwoNumbers, the program continues with caller of Calculate.
+            await AddTwoNumbers(number1, number2);
+            Console.WriteLine(@"Just after await call:");
+        }
+
+        private async Task<int> AddTwoNumbers(int number1, int number2)
+        {
+            Task<int> task = new Task<int>(this.AddTwoNumbersBackGround, new Tuple<int, int>(number1, number2));
+            task.Start();
+
+            return await task;
         }
 
         private int AddTwoNumbersBackGround(object numbersTuple)

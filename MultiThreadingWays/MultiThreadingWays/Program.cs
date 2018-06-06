@@ -25,9 +25,16 @@ namespace MultiThreadingWays
             tasksExample02.AddTwoNumbers(number1 + 1, number2 + 1);
 
 
-            AsyncAwaitExample asyncAwaitExample = new AsyncAwaitExample();
-            asyncAwaitExample.Calculate(number1 + 2, number2 + 2);
+            AsyncAwaitExample1 asyncAwaitExample = new AsyncAwaitExample1();
 
+            try
+            {
+                asyncAwaitExample.Calculate1(number1 + 2, number2 + 2);
+            }
+            catch(Exception ex)
+            {
+                ;
+            }
             Console.WriteLine(@"=====");
             Console.ReadLine();
 
